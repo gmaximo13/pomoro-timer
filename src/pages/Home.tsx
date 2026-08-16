@@ -9,7 +9,31 @@ export const Home = () => {
     const navigation = useNavigation<TScreenDefinitionsProps>();
 
   return (
-    <View>
+    <View style={ styles.container }>
+
+      <View style={ styles.titleContainer }>
+        <Text style={ styles.titleText }>
+          Pomodoro
+        </Text>
+      </View>
+
+      <View style={ styles.stateContainer }>
+        <Text style={ styles.stateText }>
+          Hora de se concentrar!
+        </Text>
+
+        <Text style={ styles.stateText }>
+          Pausa curta
+        </Text>
+
+        <Text style={ styles.stateText }>
+          Pausa longa
+        </Text>
+
+        <Text style={ styles.stateText }>
+          Cronômetro em pausa
+        </Text>
+      </View>
 
       <View style={ styles.progressContainer }>
         <AnimatedCircularProgress
@@ -60,6 +84,17 @@ export const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 36,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  titleGroup: {
+    gap:24
+  },
+
   primaryButton: {
     backgroundColor: Theme.colors.primary,
     paddingVertical: 8,
@@ -101,6 +136,28 @@ const styles = StyleSheet.create({
     progressText: {
     fontFamily: 'InterBold',
     fontSize: Theme.fontSizes.extraLarge,
+    color: Theme.colors.text,
+  },
+
+  titleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  titleText: {
+    fontFamily: 'InterBold',
+    fontSize: Theme.fontSizes.extraLarge,
+    color: Theme.colors.text,
+  },
+
+  stateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  stateText: {
+    fontFamily: 'InterRegular',
+    fontSize: Theme.fontSizes.medium,
     color: Theme.colors.text,
   },
 });
