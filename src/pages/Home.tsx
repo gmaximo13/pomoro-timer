@@ -21,7 +21,7 @@ export const Home = () => {
         <Text style={ styles.stateText }>
           Hora de se concentrar!
         </Text>
-
+{/* 
         <Text style={ styles.stateText }>
           Pausa curta
         </Text>
@@ -32,7 +32,7 @@ export const Home = () => {
 
         <Text style={ styles.stateText }>
           Cronômetro em pausa
-        </Text>
+        </Text> */}
       </View>
 
       <View style={ styles.progressContainer }>
@@ -60,7 +60,7 @@ export const Home = () => {
       </View>
 
       <View style={ styles.buttonContainer }>
-        <TouchableOpacity style={ styles.primaryButton }>
+        {/* <TouchableOpacity style={ styles.primaryButton }>
             <Text style={ styles.primaryButtonText }>Pausar</Text>
         </TouchableOpacity>
 
@@ -76,7 +76,16 @@ export const Home = () => {
 
         <TouchableOpacity style={ styles.secondaryButton }>
             <Text style={ styles.secondaryButtonText }>Reiniciar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+      </View>
+      
+      <View style={ styles.pomodoroIndicatorContainer }>
+        <Text style={ styles.pomodoroIndicatorText }>Pomodoros:</Text>
+
+        <View style={ styles.pomodoroIndicatorComplete } />
+        <View style={ styles.pomodoroIndicatorComplete } />
+        <View style={ styles.pomodoroIndicator } />
+        <View style={ styles.pomodoroIndicator } />
       </View>
 
     </View>
@@ -159,5 +168,32 @@ const styles = StyleSheet.create({
     fontFamily: 'InterRegular',
     fontSize: Theme.fontSizes.medium,
     color: Theme.colors.text,
+  },
+
+  pomodoroIndicatorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+
+  pomodoroIndicatorText: {
+    fontFamily: 'InterRegular',
+    fontSize: Theme.fontSizes.medium,
+    color: Theme.colors.text,
+  },
+
+  pomodoroIndicator: {
+    width: 20,
+    height: 20,
+    borderRadius: '100%',
+    backgroundColor: Theme.colors.divider,
+  },
+
+  pomodoroIndicatorComplete: {
+    width: 20,
+    height: 20,
+    borderRadius: '100%',
+    backgroundColor: Theme.colors.primary,
   },
 });
