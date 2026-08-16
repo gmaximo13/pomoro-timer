@@ -10,7 +10,7 @@ export const Theme = {
         InterBold: 'InterBold',
     },
     fontSizes: {
-        'extra-large': 32,
+        extraLarge: 32,
         large: 20,
         medium: 16,
         small: 12,
