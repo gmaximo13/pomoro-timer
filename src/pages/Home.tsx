@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
+import { MaterialIcons } from '@expo/vector-icons' 
 
 import { TScreenDefinitionsProps } from "../AppRoutes";
 import { Theme } from "../shared/themes/Theme";
@@ -9,7 +10,19 @@ export const Home = () => {
     const navigation = useNavigation<TScreenDefinitionsProps>();
 
   return (
-    <View style={ styles.container }>
+    <View style={ styles.header}>
+      <View style={ styles.container }>
+
+      <TouchableOpacity 
+        style={ styles.settingsButton } 
+        onPress={() => navigation.navigate('Settings')}
+      >
+        <MaterialIcons
+          name="settings"
+          size={28} 
+          color={Theme.colors.divider}  
+        />      
+      </TouchableOpacity>
 
       <View style={ styles.titleContainer }>
         <Text style={ styles.titleText }>
@@ -88,16 +101,28 @@ export const Home = () => {
         <View style={ styles.pomodoroIndicator } />
       </View>
 
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  
   container: {
     gap: 36,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  settingsButton: {
+    alignSelf: 'flex-end',
   },
 
   titleGroup: {
