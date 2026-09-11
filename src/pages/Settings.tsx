@@ -1,12 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons' 
+import { useState } from "react";
 
 import { TScreenDefinitionsProps } from "../AppRoutes";
 import { Theme } from "../shared/themes/Theme";
 
+
 export const Settings = () => {
-    const navigation = useNavigation<TScreenDefinitionsProps>();
+  const navigation = useNavigation<TScreenDefinitionsProps>();
+
+  const [focusPeriod, setFocusPeriod] = useState(25);
+  const [shortBreakPeriod, setShortBreakPeriod] = useState(5);
+  const [longBreakPeriod, setLongBreakPeriod] = useState(15);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
     <View style={ styles.header}>
@@ -37,19 +44,29 @@ export const Settings = () => {
               </Text>
 
               <View style={ styles.formFieldButtons }>
-                <TouchableOpacity style={ styles.secondaryButton }>
+                <TouchableOpacity 
+                style={ focusPeriod === 15 ? styles.primaryButton : styles.secondaryButton } 
+                onPress={() => setFocusPeriod(15)
+                }
+                >
                   <Text style={ styles.secondaryButtonText }>
                     15 min
                   </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={ styles.primaryButton }>
+              <TouchableOpacity 
+              style={ focusPeriod === 25 ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setFocusPeriod(25)}
+              >
                   <Text style={ styles.primaryButtonText }>
                     25 min
                   </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={ styles.primaryButton }>
+              <TouchableOpacity 
+              style={ focusPeriod === 35 ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setFocusPeriod(35)}
+              >
                   <Text style={ styles.primaryButtonText }>
                     35 min
                   </Text>
@@ -63,22 +80,31 @@ export const Settings = () => {
               </Text>
 
               <View style={ styles.formFieldButtons }>
-                <TouchableOpacity style={ styles.secondaryButton }>
+                <TouchableOpacity 
+                style={ shortBreakPeriod === 3 ? styles.primaryButton : styles.secondaryButton } 
+                onPress={() => setShortBreakPeriod(3)}
+                >
                   <Text style={ styles.secondaryButtonText }>
                     3 min
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ styles.primaryButton }>
-                    <Text style={ styles.primaryButtonText }>
+                <TouchableOpacity 
+                style={ shortBreakPeriod === 5 ? styles.primaryButton : styles.secondaryButton } 
+                onPress={() => setShortBreakPeriod(5)}
+                >
+                  <Text style={ styles.primaryButtonText }>
                       5 min
-                    </Text>
+                  </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={ styles.primaryButton }>
-                    <Text style={ styles.primaryButtonText }>
+                <TouchableOpacity 
+                style={ shortBreakPeriod === 7 ? styles.primaryButton : styles.secondaryButton } 
+                onPress={() => setShortBreakPeriod(7)}
+                >
+                  <Text style={ styles.primaryButtonText }>
                       7 min
-                    </Text>
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -89,22 +115,31 @@ export const Settings = () => {
             </Text>
 
             <View style={ styles.formFieldButtons }>
-              <TouchableOpacity style={ styles.secondaryButton }>
+              <TouchableOpacity 
+              style={ longBreakPeriod === 10 ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setLongBreakPeriod(10)}
+              >
                 <Text style={ styles.secondaryButtonText }>
                   10 min
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={ styles.primaryButton }>
-                  <Text style={ styles.primaryButtonText }>
-                    15 min
-                  </Text>
+              <TouchableOpacity 
+              style={ longBreakPeriod === 15 ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setLongBreakPeriod(15)}
+              >
+                <Text style={ styles.primaryButtonText }>
+                  15 min
+                </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={ styles.primaryButton }>
-                  <Text style={ styles.primaryButtonText }>
-                    20 min
-                  </Text>
+              <TouchableOpacity 
+              style={ longBreakPeriod === 20 ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setLongBreakPeriod(20)}
+              >
+                <Text style={ styles.primaryButtonText }>
+                  20 min
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -115,17 +150,24 @@ export const Settings = () => {
             </Text>
 
             <View style={ styles.formFieldButtons }>
-              <TouchableOpacity style={ styles.secondaryButton }>
+              <TouchableOpacity 
+                style={ notificationsEnabled ? styles.primaryButton : styles.secondaryButton } 
+                onPress={() => setNotificationsEnabled(true)}
+                >
+                  <Text style={ styles.primaryButtonText }>
+                    Ativado
+                  </Text>
+                </TouchableOpacity>
+
+              <TouchableOpacity 
+              style={ !notificationsEnabled ? styles.primaryButton : styles.secondaryButton } 
+              onPress={() => setNotificationsEnabled(false)}
+              >
                 <Text style={ styles.secondaryButtonText }>
                   Desativado
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={ styles.primaryButton }>
-                  <Text style={ styles.primaryButtonText }>
-                    Ativado
-                  </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -153,12 +195,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 
-
   primaryButton: {
     backgroundColor: Theme.colors.primary,
     paddingVertical: 8,
     paddingHorizontal: 24,
     borderRadius: 55,
+    borderWidth: 2,
+    borderColor: Theme.colors.primary,
   },
 
   primaryButtonText: {
