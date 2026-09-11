@@ -12,8 +12,8 @@ SplashScreen.preventAutoHideAsync(); // Keep the splash screen visible while we 
 
 export function App() {
   const [loaded, error] = useFonts({
-    'InterBold': Inter_700Bold,
-    'InterRegular': Inter_400Regular
+    InterBold: Inter_700Bold,
+    InterRegular: Inter_400Regular,
   });
 
   useEffect(() => {
@@ -23,8 +23,8 @@ export function App() {
   }, [loaded, error]);
 
   if (!loaded && !error) {
-      return null;
-    }
+    return null;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Theme.colors.background }}>
@@ -34,4 +34,3 @@ export function App() {
     </SafeAreaView>
   );
 }
-

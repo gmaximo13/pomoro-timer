@@ -1,11 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons' 
-import { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useState } from 'react';
 
-import { TScreenDefinitionsProps } from "../AppRoutes";
-import { Theme } from "../shared/themes/Theme";
-
+import { TScreenDefinitionsProps } from '../AppRoutes';
+import { Theme } from '../shared/themes/Theme';
 
 export const Settings = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
@@ -16,158 +15,161 @@ export const Settings = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
-    <View style={ styles.header}>
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.settingsButton}
+        onPress={() => navigation.goBack()}
+      >
+        <MaterialIcons name="close" size={28} color={Theme.colors.divider} />
+      </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Configurações</Text>
+        </View>
 
-        <TouchableOpacity 
-          style={ styles.settingsButton } 
-          onPress={() => navigation.goBack()}
-        >
-          <MaterialIcons
-            name="close"
-            size={28} 
-            color={Theme.colors.divider}  
-          />      
-        </TouchableOpacity>
-        <View style={ styles.container }>
-          
-          <View style={ styles.titleContainer }>
-            <Text style={ styles.titleText }>
-              Configurações
-            </Text>
-          </View>
-          
-          <View style={ styles.formContainer }>
+        <View style={styles.formContainer}>
+          <View style={styles.formFieldContainer}>
+            <Text style={styles.formFieldLabel}>Período de foco</Text>
 
-            <View style={ styles.formFieldContainer }>
-              <Text style={ styles.formFieldLabel }>
-                Período de foco
-              </Text>
-
-              <View style={ styles.formFieldButtons }>
-                <TouchableOpacity 
-                style={ focusPeriod === 15 ? styles.primaryButton : styles.secondaryButton } 
-                onPress={() => setFocusPeriod(15)
+            <View style={styles.formFieldButtons}>
+              <TouchableOpacity
+                style={
+                  focusPeriod === 15
+                    ? styles.primaryButton
+                    : styles.secondaryButton
                 }
-                >
-                  <Text style={ styles.secondaryButtonText }>
-                    15 min
-                  </Text>
+                onPress={() => setFocusPeriod(15)}
+              >
+                <Text style={styles.secondaryButtonText}>15 min</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-              style={ focusPeriod === 25 ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setFocusPeriod(25)}
+              <TouchableOpacity
+                style={
+                  focusPeriod === 25
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setFocusPeriod(25)}
               >
-                  <Text style={ styles.primaryButtonText }>
-                    25 min
-                  </Text>
+                <Text style={styles.primaryButtonText}>25 min</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-              style={ focusPeriod === 35 ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setFocusPeriod(35)}
+              <TouchableOpacity
+                style={
+                  focusPeriod === 35
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setFocusPeriod(35)}
               >
-                  <Text style={ styles.primaryButtonText }>
-                    35 min
-                  </Text>
-              </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={ styles.formFieldContainer }>
-              <Text style={ styles.formFieldLabel }>
-                Pausa curta
-              </Text>
-
-              <View style={ styles.formFieldButtons }>
-                <TouchableOpacity 
-                style={ shortBreakPeriod === 3 ? styles.primaryButton : styles.secondaryButton } 
-                onPress={() => setShortBreakPeriod(3)}
-                >
-                  <Text style={ styles.secondaryButtonText }>
-                    3 min
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                style={ shortBreakPeriod === 5 ? styles.primaryButton : styles.secondaryButton } 
-                onPress={() => setShortBreakPeriod(5)}
-                >
-                  <Text style={ styles.primaryButtonText }>
-                      5 min
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                style={ shortBreakPeriod === 7 ? styles.primaryButton : styles.secondaryButton } 
-                onPress={() => setShortBreakPeriod(7)}
-                >
-                  <Text style={ styles.primaryButtonText }>
-                      7 min
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-          <View style={ styles.formFieldContainer }>
-            <Text style={ styles.formFieldLabel }>
-              Pausa longa
-            </Text>
-
-            <View style={ styles.formFieldButtons }>
-              <TouchableOpacity 
-              style={ longBreakPeriod === 10 ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setLongBreakPeriod(10)}
-              >
-                <Text style={ styles.secondaryButtonText }>
-                  10 min
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-              style={ longBreakPeriod === 15 ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setLongBreakPeriod(15)}
-              >
-                <Text style={ styles.primaryButtonText }>
-                  15 min
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-              style={ longBreakPeriod === 20 ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setLongBreakPeriod(20)}
-              >
-                <Text style={ styles.primaryButtonText }>
-                  20 min
-                </Text>
+                <Text style={styles.primaryButtonText}>35 min</Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <View style={ styles.formFieldContainer }>
-            <Text style={ styles.formFieldLabel }>
-              Notificações
-            </Text>
+          <View style={styles.formFieldContainer}>
+            <Text style={styles.formFieldLabel}>Pausa curta</Text>
 
-            <View style={ styles.formFieldButtons }>
-              <TouchableOpacity 
-                style={ notificationsEnabled ? styles.primaryButton : styles.secondaryButton } 
-                onPress={() => setNotificationsEnabled(true)}
-                >
-                  <Text style={ styles.primaryButtonText }>
-                    Ativado
-                  </Text>
-                </TouchableOpacity>
-
-              <TouchableOpacity 
-              style={ !notificationsEnabled ? styles.primaryButton : styles.secondaryButton } 
-              onPress={() => setNotificationsEnabled(false)}
+            <View style={styles.formFieldButtons}>
+              <TouchableOpacity
+                style={
+                  shortBreakPeriod === 3
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setShortBreakPeriod(3)}
               >
-                <Text style={ styles.secondaryButtonText }>
-                  Desativado
-                </Text>
+                <Text style={styles.secondaryButtonText}>3 min</Text>
               </TouchableOpacity>
 
+              <TouchableOpacity
+                style={
+                  shortBreakPeriod === 5
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setShortBreakPeriod(5)}
+              >
+                <Text style={styles.primaryButtonText}>5 min</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  shortBreakPeriod === 7
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setShortBreakPeriod(7)}
+              >
+                <Text style={styles.primaryButtonText}>7 min</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.formFieldContainer}>
+            <Text style={styles.formFieldLabel}>Pausa longa</Text>
+
+            <View style={styles.formFieldButtons}>
+              <TouchableOpacity
+                style={
+                  longBreakPeriod === 10
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setLongBreakPeriod(10)}
+              >
+                <Text style={styles.secondaryButtonText}>10 min</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  longBreakPeriod === 15
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setLongBreakPeriod(15)}
+              >
+                <Text style={styles.primaryButtonText}>15 min</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  longBreakPeriod === 20
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setLongBreakPeriod(20)}
+              >
+                <Text style={styles.primaryButtonText}>20 min</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.formFieldContainer}>
+            <Text style={styles.formFieldLabel}>Notificações</Text>
+
+            <View style={styles.formFieldButtons}>
+              <TouchableOpacity
+                style={
+                  notificationsEnabled
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setNotificationsEnabled(true)}
+              >
+                <Text style={styles.primaryButtonText}>Ativado</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={
+                  !notificationsEnabled
+                    ? styles.primaryButton
+                    : styles.secondaryButton
+                }
+                onPress={() => setNotificationsEnabled(false)}
+              >
+                <Text style={styles.secondaryButtonText}>Desativado</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
-  
+
   container: {
     gap: 36,
     flex: 1,
@@ -237,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
   titleText: {
     fontFamily: 'InterBold',
     fontSize: Theme.fontSizes.extraLarge,
@@ -247,7 +249,6 @@ const styles = StyleSheet.create({
   formFieldContainer: {
     gap: 8,
     width: '100%',
-
   },
 
   formFieldLabel: {

@@ -1,40 +1,31 @@
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
-import { MaterialIcons } from '@expo/vector-icons' 
+import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { MaterialIcons } from '@expo/vector-icons';
 
-import { TScreenDefinitionsProps } from "../AppRoutes";
-import { Theme } from "../shared/themes/Theme";
+import { TScreenDefinitionsProps } from '../AppRoutes';
+import { Theme } from '../shared/themes/Theme';
 
 export const Home = () => {
-    const navigation = useNavigation<TScreenDefinitionsProps>();
+  const navigation = useNavigation<TScreenDefinitionsProps>();
 
   return (
-    <View style={ styles.header}>
-      <TouchableOpacity 
-        style={ styles.settingsButton } 
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.settingsButton}
         onPress={() => navigation.navigate('Settings')}
       >
-        <MaterialIcons
-          name="settings"
-          size={28} 
-          color={Theme.colors.divider}  
-        />      
+        <MaterialIcons name="settings" size={28} color={Theme.colors.divider} />
       </TouchableOpacity>
 
-      <View style={ styles.container }>
-
-        <View style={ styles.titleContainer }>
-          <Text style={ styles.titleText }>
-            Pomodoro
-          </Text>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Pomodoro</Text>
         </View>
 
-        <View style={ styles.stateContainer }>
-          <Text style={ styles.stateText }>
-            Hora de se concentrar!
-          </Text>
-  {/* 
+        <View style={styles.stateContainer}>
+          <Text style={styles.stateText}>Hora de se concentrar!</Text>
+          {/* 
           <Text style={ styles.stateText }>
             Pausa curta
           </Text>
@@ -48,31 +39,25 @@ export const Home = () => {
           </Text> */}
         </View>
 
-        <View style={ styles.progressContainer }>
+        <View style={styles.progressContainer}>
           <AnimatedCircularProgress
             size={160}
             width={7}
             fill={90}
             tintColor={Theme.colors.primary}
-            backgroundColor={Theme.colors.divider} 
+            backgroundColor={Theme.colors.divider}
             rotation={0}
-            children={() => (
-              <Text style={ styles.progressText }>
-                12:45
-              </Text>
-            )}
+            children={() => <Text style={styles.progressText}>12:45</Text>}
           />
         </View>
-        
 
-        
-        <View style={ styles.buttonContainer }>
-          <TouchableOpacity style={ styles.primaryButton }>
-              <Text style={ styles.primaryButtonText }>Iniciar</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.primaryButton}>
+            <Text style={styles.primaryButtonText}>Iniciar</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={ styles.buttonContainer }>
+        <View style={styles.buttonContainer}>
           {/* <TouchableOpacity style={ styles.primaryButton }>
               <Text style={ styles.primaryButtonText }>Pausar</Text>
           </TouchableOpacity>
@@ -91,16 +76,15 @@ export const Home = () => {
               <Text style={ styles.secondaryButtonText }>Reiniciar</Text>
           </TouchableOpacity> */}
         </View>
-        
-        <View style={ styles.pomodoroIndicatorContainer }>
-          <Text style={ styles.pomodoroIndicatorText }>Pomodoros:</Text>
 
-          <View style={ styles.pomodoroIndicatorComplete } />
-          <View style={ styles.pomodoroIndicatorComplete } />
-          <View style={ styles.pomodoroIndicator } />
-          <View style={ styles.pomodoroIndicator } />
+        <View style={styles.pomodoroIndicatorContainer}>
+          <Text style={styles.pomodoroIndicatorText}>Pomodoros:</Text>
+
+          <View style={styles.pomodoroIndicatorComplete} />
+          <View style={styles.pomodoroIndicatorComplete} />
+          <View style={styles.pomodoroIndicator} />
+          <View style={styles.pomodoroIndicator} />
         </View>
-
       </View>
     </View>
   );
@@ -113,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
-  
+
   container: {
     gap: 36,
     flex: 1,
@@ -126,7 +110,7 @@ const styles = StyleSheet.create({
   },
 
   titleGroup: {
-    gap:24
+    gap: 24,
   },
 
   primaryButton: {
@@ -167,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-    progressText: {
+  progressText: {
     fontFamily: 'InterBold',
     fontSize: Theme.fontSizes.extraLarge,
     color: Theme.colors.text,
@@ -177,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
   titleText: {
     fontFamily: 'InterBold',
     fontSize: Theme.fontSizes.extraLarge,
