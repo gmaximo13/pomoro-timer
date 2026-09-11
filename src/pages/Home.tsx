@@ -12,6 +12,7 @@ export const Home = () => {
 
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [pomodoroStepCount, setPomodoroStepCount] = useState(0);
 
   return (
     <View style={styles.header}>
@@ -34,7 +35,7 @@ export const Home = () => {
             </Text>
           )}
 
-          {isRunning &&  (<>
+          {isRunning && (<>
             {!isPaused && (
               <Text style={styles.stateText}>
                 Hora de se concentrar!
@@ -99,7 +100,10 @@ export const Home = () => {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => setIsRunning(false)}
+              onPress={() => {
+                setIsRunning(false);
+                setPomodoroStepCount(0);
+              }}
             >
               <Text style={styles.secondaryButtonText}>
                 Parar
@@ -119,14 +123,15 @@ export const Home = () => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.secondaryButton}>
-              <Text
-                style={styles.secondaryButtonText}
-                onPress={() => {
-                  setIsRunning(false);
-                  setIsPaused(false);
-                }}
-              >
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={() => {
+                setIsRunning(false);
+                setIsPaused(false);
+                setPomodoroStepCount(0);
+              }}
+            >
+              <Text style={styles.secondaryButtonText}>
                 Reiniciar
               </Text>
             </TouchableOpacity>
@@ -138,10 +143,11 @@ export const Home = () => {
             Pomodoros:
           </Text>
 
-          <View style={styles.pomodoroIndicatorComplete} />
-          <View style={styles.pomodoroIndicatorComplete} />
-          <View style={styles.pomodoroIndicator} />
-          <View style={styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount > 0 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount > 1 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount > 2 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount > 3 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+
         </View>
       </View>
     </View>
