@@ -10,7 +10,7 @@ export const Settings = () => {
 
   return (
     <View style={ styles.header}>
-      <View style={ styles.container }>
+
         <TouchableOpacity 
           style={ styles.settingsButton } 
           onPress={() => navigation.goBack()}
@@ -21,66 +21,67 @@ export const Settings = () => {
             color={Theme.colors.divider}  
           />      
         </TouchableOpacity>
-
-        <View style={ styles.titleContainer }>
-          <Text style={ styles.titleText }>
-            Configurações
-          </Text>
-        </View>
-        
-        <View style={ styles.formContainer }>
-
-          <View style={ styles.formFieldContainer }>
-            <Text style={ styles.formFieldLabel }>
-              Período de foco
+        <View style={ styles.container }>
+          
+          <View style={ styles.titleContainer }>
+            <Text style={ styles.titleText }>
+              Configurações
             </Text>
-
-            <View style={ styles.formFieldButtons }>
-              <TouchableOpacity style={ styles.secondaryButton }>
-                <Text style={ styles.secondaryButtonText }>
-                  15 min
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  25 min
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  35 min
-                </Text>
-            </TouchableOpacity>
-            </View>
           </View>
+          
+          <View style={ styles.formContainer }>
 
-          <View style={ styles.formFieldContainer }>
-            <Text style={ styles.formFieldLabel }>
-              Pausa curta
-            </Text>
+            <View style={ styles.formFieldContainer }>
+              <Text style={ styles.formFieldLabel }>
+                Período de foco
+              </Text>
 
-            <View style={ styles.formFieldButtons }>
-              <TouchableOpacity style={ styles.secondaryButton }>
-                <Text style={ styles.secondaryButtonText }>
-                  3 min
-                </Text>
-            </TouchableOpacity>
+              <View style={ styles.formFieldButtons }>
+                <TouchableOpacity style={ styles.secondaryButton }>
+                  <Text style={ styles.secondaryButtonText }>
+                    15 min
+                  </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  5 min
-                </Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={ styles.primaryButton }>
+                  <Text style={ styles.primaryButtonText }>
+                    25 min
+                  </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  7 min
-                </Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={ styles.primaryButton }>
+                  <Text style={ styles.primaryButtonText }>
+                    35 min
+                  </Text>
+              </TouchableOpacity>
+              </View>
             </View>
-          </View>
+
+            <View style={ styles.formFieldContainer }>
+              <Text style={ styles.formFieldLabel }>
+                Pausa curta
+              </Text>
+
+              <View style={ styles.formFieldButtons }>
+                <TouchableOpacity style={ styles.secondaryButton }>
+                  <Text style={ styles.secondaryButtonText }>
+                    3 min
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={ styles.primaryButton }>
+                    <Text style={ styles.primaryButtonText }>
+                      5 min
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={ styles.primaryButton }>
+                    <Text style={ styles.primaryButtonText }>
+                      7 min
+                    </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
           <View style={ styles.formFieldContainer }>
             <Text style={ styles.formFieldLabel }>
@@ -92,19 +93,19 @@ export const Settings = () => {
                 <Text style={ styles.secondaryButtonText }>
                   10 min
                 </Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  15 min
-                </Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={ styles.primaryButton }>
+                  <Text style={ styles.primaryButtonText }>
+                    15 min
+                  </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={ styles.primaryButton }>
-                <Text style={ styles.primaryButtonText }>
-                  20 min
-                </Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={ styles.primaryButton }>
+                  <Text style={ styles.primaryButtonText }>
+                    20 min
+                  </Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -127,7 +128,6 @@ export const Settings = () => {
               </TouchableOpacity>
             </View>
           </View>
-
         </View>
       </View>
     </View>
