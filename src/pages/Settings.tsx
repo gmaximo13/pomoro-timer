@@ -9,10 +9,10 @@ import { Theme } from '../shared/themes/Theme';
 export const Settings = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
 
-  const [focusPeriod, setFocusPeriod] = useState(25);
-  const [shortBreakPeriod, setShortBreakPeriod] = useState(5);
-  const [longBreakPeriod, setLongBreakPeriod] = useState(15);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [focusPeriod, setFocusPeriod] = useState<number>(25);
+  const [shortBreakPeriod, setShortBreakPeriod] = useState<number>(5);
+  const [longBreakPeriod, setLongBreakPeriod] = useState<number>(15);
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
 
   return (
     <View style={styles.header}>

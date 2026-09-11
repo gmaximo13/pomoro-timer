@@ -10,9 +10,9 @@ import { Theme } from '../shared/themes/Theme';
 export const Home = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
 
-  const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [pomodoroStepCount, setPomodoroStepCount] = useState(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);  
+  const [pomodoroStepCount, setPomodoroStepCount] = useState<number>(0);
 
   return (
     <View style={styles.header}>
