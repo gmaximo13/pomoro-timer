@@ -74,7 +74,7 @@ export const Home = () => {
   useEffect(() => {
     if (!isRunning || isPaused) return;
     const interval = setInterval(() => {
-      setCounterFocusTime(old => old <= 0 ? old : old - 100);
+      setCounterFocusTime(old => old <= 0 ? old : old - 1);
     }, 1000);
 
     return () => clearInterval(interval);
