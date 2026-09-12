@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
@@ -11,8 +11,87 @@ export const Home = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [isPaused, setIsPaused] = useState<boolean>(false);  
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [pomodoroStepCount, setPomodoroStepCount] = useState<number>(0);
+  const [counterFocusTime, setCounterFocusTime] = useState<number>(25 * 60);
+  const [currentStatus, setCurrentStatus] = useState<'break' | 'focus' | 'shortBreak' | 'longBreak'>('break');
+
+  const [currentFocusTime] = useState<number>(25 * 60);
+  const [currentShortBreakTime] = useState<number>(5 * 60);
+  const [currentLongBreakTime] = useState<number>(15 * 60);
+
+  const handleStart = () => {
+    setIsRunning(true);
+    setPomodoroStepCount(1);
+    setCurrentStatus('focus');
+  }
+
+  const handlePause = () => {
+    setIsPaused(true);
+  }
+
+  const handleContinue = () => {
+    setIsPaused(false);
+  }
+
+  const handleReset = () => {
+    setIsRunning(false);
+    setIsPaused(false);
+    setCounterFocusTime(currentFocusTime);
+    setPomodoroStepCount(0);
+    setCurrentStatus('break');
+  }
+
+  const getProgressFill = useMemo(() => {
+    switch (currentStatus) {
+      case 'focus':
+        return (100 - (counterFocusTime / currentFocusTime) * 100);
+      case 'shortBreak':
+        return (100 - (counterFocusTime / currentShortBreakTime) * 100);
+      case 'longBreak':
+        return (100 - (counterFocusTime / currentLongBreakTime) * 100);
+      default:
+        return 0;
+    }
+  }, [counterFocusTime, currentStatus, currentFocusTime, currentShortBreakTime, currentLongBreakTime]);
+
+  useEffect(() => {
+    if (!isRunning || isPaused) return;
+    const interval = setInterval(() => {
+      setCounterFocusTime(old => old <= 0 ? old : old - 100);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRunning, isPaused]);
+
+  useEffect(() => {
+    switch (currentStatus) {
+      case 'focus': {
+        if (counterFocusTime > 0) break;
+
+        if (pomodoroStepCount < 4) {
+          setCurrentStatus('shortBreak');
+          setCounterFocusTime(currentShortBreakTime);
+        } else if (pomodoroStepCount >= 4) {
+          setPomodoroStepCount(0);
+          setCurrentStatus('longBreak');
+          setCounterFocusTime(currentLongBreakTime);
+        }
+
+        break;
+      }
+
+      case 'shortBreak':
+      case 'longBreak': {
+        if (counterFocusTime <= 0) {
+          setPomodoroStepCount(old => old + 1);
+          setCurrentStatus('focus');
+          setCounterFocusTime(currentFocusTime);
+        }
+        break;
+      }
+    }
+  }, [counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount]);
 
   return (
     <View style={styles.header}>
@@ -36,7 +115,7 @@ export const Home = () => {
           )}
 
           {isRunning && (<>
-            {!isPaused && (
+            {!isPaused && currentStatus === 'focus' && (
               <Text style={styles.stateText}>
                 Hora de se concentrar!
               </Text>
@@ -48,17 +127,17 @@ export const Home = () => {
               </Text>
             )}
 
-            {/* {(
+            {!isPaused && currentStatus === 'shortBreak' && (
               <Text style={styles.stateText}>
                 Pausa curta
               </Text>
             )}
 
-            {(
+            {!isPaused && currentStatus === 'longBreak' && (
               <Text style={styles.stateText}>
                 Pausa longa
               </Text>
-            )} */}
+            )}
           </>)}
         </View>
 
@@ -66,11 +145,15 @@ export const Home = () => {
           <AnimatedCircularProgress
             size={160}
             width={7}
-            fill={90}
-            tintColor={Theme.colors.primary}
-            backgroundColor={Theme.colors.divider}
+            fill={getProgressFill}
+            tintColor={Theme.colors.divider}
+            backgroundColor={Theme.colors.primary}
             rotation={0}
-            children={() => <Text style={styles.progressText}>12:45</Text>}
+            children={() => (
+              <Text style={styles.progressText}>
+                {Math.floor(counterFocusTime / 60)}:{String(counterFocusTime % 60).padStart(2, '0')}
+              </Text>
+            )}
           />
         </View>
 
@@ -78,7 +161,7 @@ export const Home = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
-              onPress={() => setIsRunning(true)}
+              onPress={handleStart}
             >
               <Text style={styles.primaryButtonText}>
                 Iniciar
@@ -91,7 +174,7 @@ export const Home = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
-              onPress={() => setIsPaused(true)}
+              onPress={handlePause}
             >
               <Text style={styles.primaryButtonText}>
                 Pausar
@@ -100,10 +183,7 @@ export const Home = () => {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => {
-                setIsRunning(false);
-                setPomodoroStepCount(0);
-              }}
+              onPress={handleReset}
             >
               <Text style={styles.secondaryButtonText}>
                 Parar
@@ -116,7 +196,7 @@ export const Home = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
-              onPress={() => setIsPaused(false)}
+              onPress={handleContinue}
             >
               <Text style={styles.primaryButtonText}>
                 Continuar
@@ -125,11 +205,7 @@ export const Home = () => {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => {
-                setIsRunning(false);
-                setIsPaused(false);
-                setPomodoroStepCount(0);
-              }}
+              onPress={handleReset}
             >
               <Text style={styles.secondaryButtonText}>
                 Reiniciar
@@ -143,10 +219,10 @@ export const Home = () => {
             Pomodoros:
           </Text>
 
-          <View style={pomodoroStepCount > 0 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
-          <View style={pomodoroStepCount > 1 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
-          <View style={pomodoroStepCount > 2 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
-          <View style={pomodoroStepCount > 3 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount >= 1 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount >= 2 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount >= 3 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
+          <View style={pomodoroStepCount >= 4 ? styles.pomodoroIndicatorComplete : styles.pomodoroIndicator} />
 
         </View>
       </View>
