@@ -1,8 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
@@ -14,11 +15,10 @@ export const Home = () => {
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [pomodoroStepCount, setPomodoroStepCount] = useState<number>(0);
   const [counterFocusTime, setCounterFocusTime] = useState<number>(25 * 60);
+  const [currentFocusTime, setCurrentFocusTime] = useState<number>(25 * 60);
+  const [currentShortBreakTime, setCurrentShortBreakTime] = useState<number>(5 * 60);
+  const [currentLongBreakTime, setCurrentLongBreakTime] = useState<number>(15 * 60);
   const [currentStatus, setCurrentStatus] = useState<'break' | 'focus' | 'shortBreak' | 'longBreak'>('break');
-
-  const [currentFocusTime] = useState<number>(25 * 60);
-  const [currentShortBreakTime] = useState<number>(5 * 60);
-  const [currentLongBreakTime] = useState<number>(15 * 60);
 
   const handleStart = () => {
     setIsRunning(true);
@@ -54,6 +54,22 @@ export const Home = () => {
         return 0;
     }
   }, [counterFocusTime, currentStatus, currentFocusTime, currentShortBreakTime, currentLongBreakTime]);
+
+  useFocusEffect(
+    useCallback(() => {
+      Promise.all([
+        AsyncStorage.getItem('FOCUS_PERIOD'),
+        AsyncStorage.getItem('SHORT_BREAK_PERIOD'),
+        AsyncStorage.getItem('LONG_BREAK_PERIOD'),
+
+      ]).then(([focusPeriodValue, shortBreakPeriodValue, longBreakPeriodValue]) => {
+        setCurrentFocusTime(JSON.parse(focusPeriodValue || '25') * 60);
+        setCurrentShortBreakTime(JSON.parse(shortBreakPeriodValue || '5') * 60);
+        setCurrentLongBreakTime(JSON.parse(longBreakPeriodValue || '15') * 60);
+        setCounterFocusTime(JSON.parse(focusPeriodValue || '25') * 60);
+      });
+    }, [])
+  );
 
   useEffect(() => {
     if (!isRunning || isPaused) return;
