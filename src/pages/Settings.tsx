@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
@@ -13,6 +14,81 @@ export const Settings = () => {
   const [shortBreakPeriod, setShortBreakPeriod] = useState<number>(5);
   const [longBreakPeriod, setLongBreakPeriod] = useState<number>(15);
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(true);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const saveFocusPeriod = async (focusPeriod: number) => {
+    try {
+      await AsyncStorage.setItem('FOCUS_PERIOD', JSON.stringify(focusPeriod));
+    } catch (e) {
+      console.error('Error saving focus period:', e);
+    }
+  };
+
+  const saveShortBreakPeriod = async (shortBreakPeriod: number) => {
+    try {
+      await AsyncStorage.setItem('SHORT_BREAK_PERIOD', JSON.stringify(shortBreakPeriod));
+    } catch (e) {
+      console.error('Error saving short break period:', e);
+    }
+  };
+
+  const saveLongBreakPeriod = async (longBreakPeriod: number) => {
+    try {
+      await AsyncStorage.setItem('LONG_BREAK_PERIOD', JSON.stringify(longBreakPeriod));
+    } catch (e) {
+      console.error('Error saving long break period:', e);
+    }
+  };
+
+  const saveNotificationsEnabled = async (notificationsEnabled: boolean) => {
+    try {
+      await AsyncStorage.setItem('NOTIFICATIONS_ENABLED', JSON.stringify(notificationsEnabled));
+    } catch (e) {
+      console.error('Error saving notifications enabled:', e);
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([
+      AsyncStorage.getItem('FOCUS_PERIOD'),
+      AsyncStorage.getItem('SHORT_BREAK_PERIOD'),
+      AsyncStorage.getItem('LONG_BREAK_PERIOD'),
+      AsyncStorage.getItem('NOTIFICATIONS_ENABLED')
+
+    ]).then(([focusPeriodValue, shortBreakPeriodValue, longBreakPeriodValue, notificationsEnabledValue]) => {
+      setFocusPeriod(JSON.parse(focusPeriodValue || '25'));
+      setShortBreakPeriod(JSON.parse(shortBreakPeriodValue || '5'));
+      setLongBreakPeriod(JSON.parse(longBreakPeriodValue || '15'));
+      setNotificationsEnabled(JSON.parse(notificationsEnabledValue || 'true'));
+
+    }).finally(() => {
+      setIsLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    saveFocusPeriod(focusPeriod);
+  }, [focusPeriod, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    saveShortBreakPeriod(shortBreakPeriod);
+  }, [shortBreakPeriod, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    saveLongBreakPeriod(longBreakPeriod);
+  }, [longBreakPeriod, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    saveNotificationsEnabled(notificationsEnabled);
+  }, [notificationsEnabled, isLoaded]);
 
   return (
     <View style={styles.header}>
