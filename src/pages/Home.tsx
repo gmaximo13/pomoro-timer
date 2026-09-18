@@ -55,6 +55,30 @@ export const Home = () => {
     }
   }, [counterFocusTime, currentStatus, currentFocusTime, currentShortBreakTime, currentLongBreakTime]);
 
+  const savePomodoroState = async (counterFocusTime: number, currentStatus: string, currentShortBreakTime: number, currentLongBreakTime: number, currentFocusTime: number, pomodoroStepCount: number, isRunning: boolean, isPaused: boolean) => {
+    await AsyncStorage.setItem('POMODORO_STATE', JSON.stringify({
+      time: Date.now(),
+      counterFocusTime,
+      currentStatus,
+      currentShortBreakTime,
+      currentLongBreakTime,
+      currentFocusTime,
+      pomodoroStepCount,
+      isRunning,
+      isPaused
+    }));
+  }
+
+  // const loadPomodoroState = async () => {
+  //   const pomodoroState = await AsyncStorage.getItem('POMODORO_STATE');
+
+  //   console.log('pomodoroState', pomodoroState);
+  // }
+
+  // useEffect(() => {
+  //   loadPomodoroState();
+  // }, []);
+
   useFocusEffect(
     useCallback(() => {
       Promise.all([
@@ -93,7 +117,6 @@ export const Home = () => {
           setCurrentStatus('longBreak');
           setCounterFocusTime(currentLongBreakTime);
         }
-
         break;
       }
 
@@ -107,7 +130,28 @@ export const Home = () => {
         break;
       }
     }
-  }, [counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount]);
+
+    savePomodoroState(counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount, isRunning, isPaused);
+    // AsyncStorage.setItem('POMODORO_STATE', JSON.stringify({
+    //   time: Date.now(),
+    //   counterFocusTime,
+    //   currentStatus,
+    //   currentShortBreakTime,
+    //   currentLongBreakTime,
+    //   currentFocusTime,
+    //   pomodoroStepCount,
+    //   isRunning,
+    //   isPaused
+    // }));
+
+  }, [counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount, isRunning, isPaused]);
+
+    useEffect(() => {
+    AsyncStorage.getItem('POMODORO_STATE').then((data) => {
+      console.log('data', data);
+    });
+  }, []);
+
 
   return (
     <View style={styles.header}>
