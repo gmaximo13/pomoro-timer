@@ -1,13 +1,14 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
 import { updateStateByElapsedTime } from '../shared/helpers/UpdateStateByElapsedTime';
+import { NotificationService } from '../services/NotificationService';
 
 export const Home = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
@@ -21,6 +22,7 @@ export const Home = () => {
   const [currentShortBreakTime, setCurrentShortBreakTime] = useState<number>(5 * 60);
   const [currentLongBreakTime, setCurrentLongBreakTime] = useState<number>(15 * 60);
   const [currentStatus, setCurrentStatus] = useState<'break' | 'focus' | 'shortBreak' | 'longBreak'>('break');
+  const [notifationEnable, setNotificationEnable] =useState<boolean>(false);
 
   const handleStart = () => {
     setIsRunning(true);
@@ -81,19 +83,19 @@ export const Home = () => {
 
   const loadPomodoroState = async () => {
     await AsyncStorage
-    .getItem('POMODORO_STATE')
-    .then((value) => {
-      if (!value) return null;
-      
-      const parsedValue = JSON.parse(value);
-      const updatedPomodoroState = updateStateByElapsedTime(parsedValue);
+      .getItem('POMODORO_STATE')
+      .then((value) => {
+        if (!value) return null;
 
-      setCounterFocusTime(updatedPomodoroState.counterFocusTime);
-      setCurrentStatus(updatedPomodoroState.currentStatus);
-      setPomodoroStepCount(updatedPomodoroState.pomodoroStepCount);
-      setIsRunning(updatedPomodoroState.isRunning);
-      setIsPaused(updatedPomodoroState.isPaused);  
-    });
+        const parsedValue = JSON.parse(value);
+        const updatedPomodoroState = updateStateByElapsedTime(parsedValue);
+
+        setCounterFocusTime(updatedPomodoroState.counterFocusTime);
+        setCurrentStatus(updatedPomodoroState.currentStatus);
+        setPomodoroStepCount(updatedPomodoroState.pomodoroStepCount);
+        setIsRunning(updatedPomodoroState.isRunning);
+        setIsPaused(updatedPomodoroState.isPaused);
+      });
   }
 
   const isShouldUpdate = useRef(true);
@@ -104,14 +106,30 @@ export const Home = () => {
         AsyncStorage.getItem('FOCUS_PERIOD'),
         AsyncStorage.getItem('SHORT_BREAK_PERIOD'),
         AsyncStorage.getItem('LONG_BREAK_PERIOD'),
+        AsyncStorage.getItem('NOTIFICATIONS_ENABLED'),
 
-      ]).then(([focusPeriodValue, shortBreakPeriodValue, longBreakPeriodValue]) => {
+      ]).then(([focusPeriodValue, shortBreakPeriodValue, longBreakPeriodValue, noticationEnable]) => {
         setCurrentFocusTime(JSON.parse(focusPeriodValue || '25') * 60);
         setCurrentShortBreakTime(JSON.parse(shortBreakPeriodValue || '5') * 60);
         setCurrentLongBreakTime(JSON.parse(longBreakPeriodValue || '15') * 60);
+        setNotificationEnable(JSON.parse(noticationEnable || 'false'))
       });
     }, [])
   );
+
+  useEffect(() => {
+    NotificationService.requestPermission();
+  }, []);
+
+  useEffect(() => {
+    if (!notifationEnable) {
+      NotificationService.deactivateNotification()
+      return;
+    }
+
+    (appState !== 'active' && isRunning && !isPaused) ? NotificationService.activateNotification() : NotificationService.deactivateNotification();
+
+  }, [appState, isRunning, isPaused, notifationEnable]);
 
   useEffect(() => {
     const listener = AppState.addEventListener('change', setAppState);
@@ -128,7 +146,7 @@ export const Home = () => {
     return () => listener.remove();
   }, [appState]);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   useEffect(() => {
     if (!isRunning || isPaused) return;
@@ -173,7 +191,7 @@ export const Home = () => {
     <View style={styles.header}>
       <TouchableOpacity
         disabled={isRunning}
-        style={{...styles.settingsButton, opacity: isRunning ? 0 : 1}}
+        style={{ ...styles.settingsButton, opacity: isRunning ? 0 : 1 }}
         onPress={() => navigation.navigate('Settings')}
       >
         <MaterialIcons name="settings" size={28} color={Theme.colors.divider} />
