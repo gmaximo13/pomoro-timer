@@ -1,9 +1,9 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
@@ -11,6 +11,7 @@ import { updateStateByElapsedTime } from '../shared/helpers/UpdateStateByElapsed
 
 export const Home = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
+  const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -25,14 +26,20 @@ export const Home = () => {
     setIsRunning(true);
     setPomodoroStepCount(1);
     setCurrentStatus('focus');
+
+    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, 'focus', 1, true, isPaused);
   }
 
   const handlePause = () => {
     setIsPaused(true);
+
+    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, true);
   }
 
   const handleContinue = () => {
     setIsPaused(false);
+
+    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, false);
   }
 
   const handleReset = () => {
@@ -41,6 +48,8 @@ export const Home = () => {
     setCounterFocusTime(currentFocusTime);
     setPomodoroStepCount(0);
     setCurrentStatus('break');
+
+    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, 'break', 0, false, false);
   }
 
   const getProgressFill = useMemo(() => {
@@ -87,9 +96,7 @@ export const Home = () => {
     });
   }
 
-  useEffect(() => {
-    loadPomodoroState();
-  }, []);
+  const isShouldUpdate = useRef(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -102,10 +109,26 @@ export const Home = () => {
         setCurrentFocusTime(JSON.parse(focusPeriodValue || '25') * 60);
         setCurrentShortBreakTime(JSON.parse(shortBreakPeriodValue || '5') * 60);
         setCurrentLongBreakTime(JSON.parse(longBreakPeriodValue || '15') * 60);
-        setCounterFocusTime(JSON.parse(focusPeriodValue || '25') * 60);
       });
     }, [])
   );
+
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', setAppState);
+
+    if (isShouldUpdate.current) {
+      isShouldUpdate.current = false;
+      loadPomodoroState();
+    }
+
+    if (appState === 'background') {
+      isShouldUpdate.current = true;
+    }
+
+    return () => listener.remove();
+  }, [appState]);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (!isRunning || isPaused) return;
@@ -143,15 +166,14 @@ export const Home = () => {
       }
     }
 
-    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, isPaused);
-
   }, [counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, isPaused]);
 
 
   return (
     <View style={styles.header}>
       <TouchableOpacity
-        style={styles.settingsButton}
+        disabled={isRunning}
+        style={{...styles.settingsButton, opacity: isRunning ? 0 : 1}}
         onPress={() => navigation.navigate('Settings')}
       >
         <MaterialIcons name="settings" size={28} color={Theme.colors.divider} />
