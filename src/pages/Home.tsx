@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { TScreenDefinitionsProps } from '../AppRoutes';
 import { Theme } from '../shared/themes/Theme';
+import { updateStateByElapsedTime } from '../shared/helpers/UpdateStateByElapsedTime';
 
 export const Home = () => {
   const navigation = useNavigation<TScreenDefinitionsProps>();
@@ -55,10 +56,13 @@ export const Home = () => {
     }
   }, [counterFocusTime, currentStatus, currentFocusTime, currentShortBreakTime, currentLongBreakTime]);
 
-  const savePomodoroState = async (counterFocusTime: number, currentStatus: string, pomodoroStepCount: number, isRunning: boolean, isPaused: boolean) => {
+  const savePomodoroState = async (counterFocusTime: number, currentFocusTime: number, currentShortBreakTime: number, currentLongBreakTime: number, currentStatus: string, pomodoroStepCount: number, isRunning: boolean, isPaused: boolean) => {
     await AsyncStorage.setItem('POMODORO_STATE', JSON.stringify({
       time: Date.now(),
       counterFocusTime,
+      currentFocusTime,
+      currentShortBreakTime,
+      currentLongBreakTime,
       currentStatus,
       pomodoroStepCount,
       isRunning,
@@ -71,14 +75,15 @@ export const Home = () => {
     .getItem('POMODORO_STATE')
     .then((value) => {
       if (!value) return null;
-      const pomodoroState = JSON.parse(value);
+      
+      const parsedValue = JSON.parse(value);
+      const updatedPomodoroState = updateStateByElapsedTime(parsedValue);
 
-      setCounterFocusTime(pomodoroState.counterFocusTime);
-      setCurrentStatus(pomodoroState.currentStatus);
-      setPomodoroStepCount(pomodoroState.pomodoroStepCount);
-      setIsRunning(pomodoroState.isRunning);
-      setIsPaused(pomodoroState.isPaused);  
-
+      setCounterFocusTime(updatedPomodoroState.counterFocusTime);
+      setCurrentStatus(updatedPomodoroState.currentStatus);
+      setPomodoroStepCount(updatedPomodoroState.pomodoroStepCount);
+      setIsRunning(updatedPomodoroState.isRunning);
+      setIsPaused(updatedPomodoroState.isPaused);  
     });
   }
 
@@ -138,9 +143,9 @@ export const Home = () => {
       }
     }
 
-    savePomodoroState(counterFocusTime, currentStatus, pomodoroStepCount, isRunning, isPaused);
+    savePomodoroState(counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, isPaused);
 
-  }, [counterFocusTime, currentStatus, pomodoroStepCount, isRunning, isPaused]);
+  }, [counterFocusTime, currentFocusTime, currentShortBreakTime, currentLongBreakTime, currentStatus, pomodoroStepCount, isRunning, isPaused]);
 
 
   return (
