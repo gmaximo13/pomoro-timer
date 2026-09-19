@@ -55,29 +55,36 @@ export const Home = () => {
     }
   }, [counterFocusTime, currentStatus, currentFocusTime, currentShortBreakTime, currentLongBreakTime]);
 
-  const savePomodoroState = async (counterFocusTime: number, currentStatus: string, currentShortBreakTime: number, currentLongBreakTime: number, currentFocusTime: number, pomodoroStepCount: number, isRunning: boolean, isPaused: boolean) => {
+  const savePomodoroState = async (counterFocusTime: number, currentStatus: string, pomodoroStepCount: number, isRunning: boolean, isPaused: boolean) => {
     await AsyncStorage.setItem('POMODORO_STATE', JSON.stringify({
       time: Date.now(),
       counterFocusTime,
       currentStatus,
-      currentShortBreakTime,
-      currentLongBreakTime,
-      currentFocusTime,
       pomodoroStepCount,
       isRunning,
       isPaused
     }));
   }
 
-  // const loadPomodoroState = async () => {
-  //   const pomodoroState = await AsyncStorage.getItem('POMODORO_STATE');
+  const loadPomodoroState = async () => {
+    await AsyncStorage
+    .getItem('POMODORO_STATE')
+    .then((value) => {
+      if (!value) return null;
+      const pomodoroState = JSON.parse(value);
 
-  //   console.log('pomodoroState', pomodoroState);
-  // }
+      setCounterFocusTime(pomodoroState.counterFocusTime);
+      setCurrentStatus(pomodoroState.currentStatus);
+      setPomodoroStepCount(pomodoroState.pomodoroStepCount);
+      setIsRunning(pomodoroState.isRunning);
+      setIsPaused(pomodoroState.isPaused);  
 
-  // useEffect(() => {
-  //   loadPomodoroState();
-  // }, []);
+    });
+  }
+
+  useEffect(() => {
+    loadPomodoroState();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -131,26 +138,9 @@ export const Home = () => {
       }
     }
 
-    savePomodoroState(counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount, isRunning, isPaused);
-    // AsyncStorage.setItem('POMODORO_STATE', JSON.stringify({
-    //   time: Date.now(),
-    //   counterFocusTime,
-    //   currentStatus,
-    //   currentShortBreakTime,
-    //   currentLongBreakTime,
-    //   currentFocusTime,
-    //   pomodoroStepCount,
-    //   isRunning,
-    //   isPaused
-    // }));
+    savePomodoroState(counterFocusTime, currentStatus, pomodoroStepCount, isRunning, isPaused);
 
-  }, [counterFocusTime, currentStatus, currentShortBreakTime, currentLongBreakTime, currentFocusTime, pomodoroStepCount, isRunning, isPaused]);
-
-    useEffect(() => {
-    AsyncStorage.getItem('POMODORO_STATE').then((data) => {
-      console.log('data', data);
-    });
-  }, []);
+  }, [counterFocusTime, currentStatus, pomodoroStepCount, isRunning, isPaused]);
 
 
   return (
